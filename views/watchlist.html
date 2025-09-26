@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Watchlist</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script type="module" src="../js/scripts.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body>
+    
+    <nav>
+        <img class="logo" src="../assets/images/film_logo.png" alt="MovieFinder Logo">
+        <a href="/index.html">Home</a>
+    </nav>
+
+    <header>
+        <img class="header-image" src="../assets/images/film_logo_full.png" alt="Film Logo">
+    </header>
+
+    <h1 class="title">Your Watchlist</h1>
+    <div x-data="appData()" x-init="loadWatchlist()">
+
+    <template x-if="watchlist.length === 0">
+        <div role="status" aria-live="polite">
+            <p>Your watchlist is empty. Go back to <a href="/index.html">Home</a> to add movies.</p>
+        </div>
+    </template>
+
+    <div class="movie-count">Movies Found: <span x-text="watchlist.length"></span></div>
+
+    <template x-for="movie in watchlist" :key="movie.id">
+        <div class="movie-card">
+            <img class="movie-poster" :src="movie.primaryImage.url" :alt="`Movie poster for ${movie.primaryTitle}`" />
+            <div class="movie-details">
+                <div x-text="movie.primaryTitle"></div>
+                <div>Overview: <span x-text="movie.plot"></span></div>
+                <div>Release Date: <span x-text="movie.startYear"></span></div> 
+                <div>Genres: <span x-text="movie.genres.join(', ')"></span></div>
+            <div class="movie-buttons">
+                <button @click="loadServices(movie.id)" :aria-label="`Find where to watch ${movie.primaryTitle}`">Where to Watch</button>
+                <button @click="removeFromWatchlist(movie.id)" :aria-label="`Remove ${movie.primaryTitle} from watchlist`">Remove from Watchlist</button>
+            </div>
+            </div>
+        </div>
+    </template>
+
+
+        <div x-show="whereToWatchSlide" x-transition class="slide-panel" @click.away="closeWhereToWatchSlide()" @keydown.escape="closeWhereToWatchSlide()" tabindex="0" role="dialog" aria-modal="true" aria-labelledby="streaming-title">
+            <div class="slide-content">
+                <button @click="closeWhereToWatchSlide()" class="close-btn">×</button>
+                <template x-if="selectedMovie">
+                    <div>
+                        <img :src="selectedMovie.primaryImage.url" alt="Movie Poster" class="slide-poster" />
+                        <h2 x-text="selectedMovie.primaryTitle"></h2>
+                    
+                    <div x-show="services">
+                        <h4>Available on:</h4>
+                        <div class="streaming-service">
+                            <strong x-text="services.name"></strong>
+                            <a :href="services.link" target="_blank">Watch Now</a>
+                            <img :src="services.service.imageSet.lightThemeImage" alt="Service Logo">
+                        </div>
+                    </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    
+</body>
+</html>

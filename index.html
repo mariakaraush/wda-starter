@@ -3,19 +3,106 @@
 <head>
     <title>Showing Movie Data from an API</title>
     <link rel="stylesheet" href="./css/style.css" />
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script type="module" src="./js/scripts.js"></script>
+      <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
-    <h1>Movie Data</h1>
-    <div x-data="{
-        movies: [],
-        error: null,
-        loading: false,
-        async loadMovieData() {
-            // this.movies = ...
-        }
-    }">
+    <nav>
+        <img class="logo" src="./assets/images/film_logo.png" alt="MovieFinder Logo">
+        <a href="/index.html">Home</a>
+        <a href="/views/watchlist.html">Manage Watchlist</a>
+    </nav>
+
+    <header>
+        <img class="header-image" src="./assets/images/film_logo_full.png" alt="Film Logo">
+    </header>
+
+    <h1 class="title">Popular Films</h1>
+    <div x-data="appData()" x-init="loadMovieData(); filterMovies()">
+
+        <div x-show="toastMessage" 
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 transform translate-x-full"
+            x-transition:enter-end="opacity-100 transform translate-x-0"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 transform translate-x-0"
+            x-transition:leave-end="opacity-0 transform translate-x-full"
+            class="toast"
+            :class="toastType"
+            role="alert"
+            aria-live="polite">
+        <span x-text="toastMessage"></span>
+        <button @click="hideToast()" class="close-toast" aria-label="Close notification">x</button>
+    </div>
+
+    <div class="filters">
+        <label for="search-input" class="sr-only">Search movies</label>
+        <input class="search-input" type="text" placeholder="Search movies..." x-model="searchQuery" @input="filterMovies()" />
+
+        <label for="genre-select" class="sr-only">Filter by genre</label>
+        <select id="genre-select" class="search-input" x-model="selectedGenre">
+            <option value="">All Genres</option>
+            <template x-for="genre in genres" :key="genre">
+                <option :value="genre" x-text="genre"></option>
+            </template>
+    </select>
+
+    <label for="release-date-select" class="sr-only">Filter by release date</label>
+    <select id="release-date-select" class="search-input" x-model="selectedReleaseDate">
+        <option value="">All Release Dates</option>
+        <template x-for="date in releaseDates" :key="date">
+            <option :value="date" x-text="date"></option>
+        </template>
+    </select>
+    </div>
+
+    <div class="movie-count">Movies Found: <span x-text="movies.length"></span></div>
+
+
+    <template x-for="movie in movies">
+        <div class="movie-card">
+            <img class="movie-poster" :src="movie.primaryImage.url" :alt="`Movie poster for ${movie.primaryTitle}`" />
+            <div class="movie-details">
+                <div x-text="movie.primaryTitle"></div>
+                <div>Overview: <span x-text="movie.plot"></span></div>
+                <div>Release Date: <span x-text="movie.startYear"></span></div>
+                <div>Genres: <span x-text="movie.genres.join(', ')"></span></div>
+                <div class="movie-buttons">
+                    <button @click="getMovieCredits(movie.id)" :aria-label="`View details for ${movie.primaryTitle}`">More Details</button>
+                    <button @click="addToWatchlist(movie.id)" :aria-label="`Add ${movie.primaryTitle} to watchlist`">Add to Watchlist</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <div x-show="showSlide" x-transition class="slide-panel" @click.away="closeSlide()" @keydown.escape="closeSlide()" tabindex="0" role="dialog" aria-modal="true" aria-labelledby="movie-title">
+        <div class="slide-content">
+            <button @click="closeSlide()" class="close-btn" aria-label="Close movie details panel">×</button>
+            <template x-if="selectedMovie">
+                <div>
+                    <img :src="selectedMovie.primaryImage.url" :alt="`Movie poster for ${selectedMovie.primaryTitle}`" class="slide-poster" />
+                    <h2 id="movie-title" x-text="selectedMovie.primaryTitle"></h2>
+                    <p><strong>Overview:</strong> <span x-text="selectedMovie.plot"></span></p>
+                    <p><strong>Release Date:</strong> <span x-text="selectedMovie.startYear"></span></p>
+                    <p><strong>Genres:</strong> <span x-text="selectedMovie.genres.join(', ')"></span></p>
+                    <p><strong>Rating:</strong> <span x-text="selectedMovie.rating?.aggregateRating"></span></p>
+                    <p><strong>Credits:</strong></p>
+                    <div x-show="credits">
+                        <template x-for="credit in credits">
+                            <div class="cast-member">
+                                <img class="cast-image" :src="credit.name.primaryImage.url" :alt="`Photo of ${credit.name.displayName}`">
+                                <div class="cast-info">
+                                    <p><strong>Name:</strong> <span x-text="credit.name.displayName"></span></p>
+                                    <p><strong>Category:</strong> <span x-text="credit.category"></span></p>
+                                    <p><strong>Role:</strong> <span x-text="credit.name.primaryProfessions.join(', ')"></span></p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
         <!-- ... -->
     </div>
 </body>

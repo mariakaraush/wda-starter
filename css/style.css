@@ -1,3 +1,251 @@
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: #000;
+    color: #fff;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 100;
+}
+
+.skip-link:focus {
+    top: 6px;
+}
+
 body {
     font-family: Arial, sans-serif;
+}
+
+nav {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    border-bottom: #333 solid 1px;
+    
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+.logo {
+    max-width: 80px;
+    max-height: 80px;
+    margin-left: 20px;
+    object-fit: contain;
+}
+
+.header-image {
+    display: none;;
+}
+header {
+    display: flex;
+    align-items: center;
+    background-color: #a4e5d9;
+    background-image: url('../assets/images/film_logo_full.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 700px auto; /* Set specific width, auto height to maintain aspect ratio */
+    height: 400px; /* Set a height for the header */
+    position: relative;
+
+}
+
+nav a:hover, button:hover {
+
+    background-color: lightgray;
+}
+
+button:focus, 
+.search-input:focus,
+a:focus {
+    outline: 2px solid #007cba;
+    outline-offset: 2px;
+}
+
+.title {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 36px;
+    color: #333;
+}
+.movie-card, .cast-member {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: auto;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    max-width: 80%;
+    overflow-y: auto;
+}
+.movie-poster, .cast-image {
+    max-width: 200px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    margin-left: 20px;
+}
+.movie-details, .cast-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.movie-details > div {
+    color: #333;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.movie-details > div > span {
+    font-weight: normal;
+    color: #555;
+}
+
+.slide-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100vh;
+    background: white;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.slide-content {
+    padding: 20px;
+}
+.where-to-watch {
+    padding: 20px;
+
+}
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: red;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.slide-poster {
+    max-width: 50%;
+    height: auto;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.movie-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+button {
+    padding: 15px 25px;
+    max-width: 300px;
+    border: none;
+    background-color: #a4e5d9;
+    color: black;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: medium;
+}
+
+.filters {
+    display: flex;
+    gap: 20px;
+    margin: 20px auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-input {
+    padding: 10px;
+    width: 250px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    font-weight: 300;
+    transition: border-color 0.3s;
+}
+
+.search-input:focus {
+    border-color: #7bc7b9;
+    outline: none;
+}
+
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1000;
+    max-width: 400px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.toast.warning {
+    background-color: #ff9800;
+}
+
+.toast.error {
+    background-color: #f44336;
+}
+
+.toast.success {
+    background-color: #4CAF50;
+}
+
+.close-toast {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    margin-left: 15px;
+    cursor: pointer;
+    padding: 0;
+    min-width: 20px;
+}
+
+.close-toast:hover {
+    opacity: 0.8;
+}
+
+.movie-count {
+    text-align: left;
+    margin: 0 auto 20px auto;
+    max-width: 80%;
+    font-size: 18px;
+    color: #333;
 }

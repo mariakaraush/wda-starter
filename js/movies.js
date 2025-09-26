@@ -1,15 +1,51 @@
 export default class MovieHelper {
 
     constructor() {
-        // Define our API root URL, we can then add specific paths onto the end for different queries
-        this.api_root = "https://api.themoviedb.org/3"
-        // Define our API key here
-        this.api_key = "YOUR_API_KEY"
+        this.api_root = "https://api.imdbapi.dev"
     }
 
-    // Use this API endpoint: https://developer.themoviedb.org/reference/discover-movie
     async getMovies() {
-        // return ...
+        const url = `${this.api_root}/titles`;
+
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+            }
+        };
+
+        const response = await fetch(url, options);
+
+        if(!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data.titles;
     }
 
+    async getMovieCredits(id) {
+        const url = `${this.api_root}/titles/${id}/credits`;
+
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+            }
+        };
+
+        const response = await fetch(url, options);
+
+        if(!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data.credits;
+    }
+
+    async addToWatchlist(movieId) {
+        console.log(`Movie with ID ${movieId} added to watchlist.`);
+        return { success: true, movieId: movieId };
+    }
 }
