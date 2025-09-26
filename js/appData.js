@@ -124,8 +124,6 @@ export function appData() {
             }
         },
 
-
-
         removeFromWatchlist(id) {
             const savedMovies = localStorage.getItem('watchlist');
             let watchlist = savedMovies ? JSON.parse(savedMovies) : [];
