@@ -1,14 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8" lang="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover your next watch, browse by genre and release date, manage your personal watchlist, and explore detailed movie information including cast and crew credits.">
     <title>Showing Movie Data from an API</title>
-    <link rel="stylesheet" href="./css/style.css" />
+
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; }
+        .title { text-align: center; margin: 20px 0; font-size: 36px; color: #333; }
+        nav { display: flex; gap: 30px; align-items: center; border-bottom: #333 solid 1px; }
+        .logo { max-width: 80px; max-height: 80px; padding: 0 20px; background-color: #a4e5d9; object-fit: contain; }
+    </style>
+
+    <link rel="preload" href="./css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="./css/style.css"></noscript>
+    
     <script type="module" src="./js/scripts.js"></script>
-      <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
     <nav>
-        <img class="logo" src="./assets/images/film_logo.png" alt="MovieFinder Logo">
+        <a href="/index.html"><img class="logo" src="./assets/images/film_logo.png" alt="MovieFinder Logo"></a>
         <a href="/index.html">Home</a>
         <a href="/views/watchlist.html">Manage Watchlist</a>
     </nav>
@@ -64,9 +77,9 @@
             <img class="movie-poster" :src="movie.primaryImage.url" :alt="`Movie poster for ${movie.primaryTitle}`" />
             <div class="movie-details">
                 <div x-text="movie.primaryTitle"></div>
-                <div>Overview: <span x-text="movie.plot"></span></div>
+                <div x-show="movie.plot">Overview: <span x-text="movie.plot"></span></div>
                 <div>Release Date: <span x-text="movie.startYear"></span></div>
-                <div>Genres: <span x-text="movie.genres.join(', ')"></span></div>
+                <div x-show="movie.genres">Genres: <span x-text="movie.genres.join(', ')"></span></div>
                 <div class="movie-buttons">
                     <button @click="getMovieCredits(movie.id)" :aria-label="`View details for ${movie.primaryTitle}`">More Details</button>
                     <button @click="addToWatchlist(movie.id)" :aria-label="`Add ${movie.primaryTitle} to watchlist`">Add to Watchlist</button>

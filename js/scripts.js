@@ -23,6 +23,27 @@ window.getMovieCredits = async (movieId) => {
     return await Movies.getMovieCredits(movieId);
 }
 
+window.getMovieById = async (movieId) => {
+    const Movies = new MovieHelper();
+    return await Movies.getMovieById(movieId);
+}
+
+// Filters
+window.getMoviesByGenre = async (genre) => {
+    const Movies = new MovieHelper();
+    return await Movies.getMoviesByGenre(genre);
+}
+
+window.getMoviesByStartYear = async (startYear) => {
+    const Movies = new MovieHelper();
+    return await Movies.getMoviesByStartYear(startYear);
+}
+
+window.getMoviesByKeyword = async (keyword) => {
+    const Movies = new MovieHelper();
+    return await Movies.getMoviesByKeyword(keyword);
+}
+
 window.appData = appData;
 
   

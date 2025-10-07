@@ -63,32 +63,35 @@ export function appData() {
             this.applyFilters();
         },
 
-        applyFilters() {
+        async applyFilters() {
             let filteredMovies = this.allMovies;
 
             if (this.selectedGenre) {
-                filteredMovies = filteredMovies.filter(movie => movie.genres && movie.genres.includes(this.selectedGenre));
+                filteredMovies = await window.getMoviesByGenre(this.selectedGenre);
                 this.loadReleaseDates(filteredMovies);
+        
             }
             
             if (this.selectedReleaseDate) {
-                filteredMovies = filteredMovies.filter(movie => movie.startYear == this.selectedReleaseDate);
+                filteredMovies = await window.getMoviesByStartYear(this.selectedReleaseDate);
+                console.log(filteredMovies);
                 this.loadGenres(filteredMovies);
             } 
             if (this.searchQuery) {
                 const query = this.searchQuery.toLowerCase();
-                filteredMovies = filteredMovies.filter(movie => 
-                    (movie.primaryTitle && movie.primaryTitle.toLowerCase().includes(query)) || 
-                    (movie.plot && movie.plot.toLowerCase().includes(query)));
+                filteredMovies = await window.getMoviesByKeyword(query);
             }
 
             this.movies = filteredMovies;
         },
-        
+        async loadMovieDetails(movieId) {
+            this.selectedMovie = await window.getMovieById(movieId);
+            this.showSlide = true;
+        },
 
         async getMovieCredits(movieId) {
-            this.selectedMovie = this.movies.find(movie => movie.id === movieId)
-            this.showSlide = true
+            this.selectedMovie = await window.getMovieById(movieId);
+            this.showSlide = true;
             this.credits = await window.getMovieCredits(movieId);
         },
 
@@ -108,14 +111,14 @@ export function appData() {
             this.watchlist = savedMovies ? JSON.parse(savedMovies) : [];
             return this.watchlist;
         },
-        addToWatchlist(movieId) {
+        async addToWatchlist(movieId) {
             const saveMovies = localStorage.getItem('watchlist');
             let watchlist = saveMovies ? JSON.parse(saveMovies) : [];
 
             const exists = watchlist.some(movie => movie.id === movieId);
             if (!exists) {
-                const movie = this.allMovies.find(m => m.id === movieId);
-                watchlist.push(movie);
+                this.selectedMovie = await window.getMovieById(movieId);
+                watchlist.push(this.selectedMovie);
                 localStorage.setItem('watchlist', JSON.stringify(watchlist));
                 this.showToast('Movie added to watchlist! 🎬', 'success');
                 this.loadWatchlist();
