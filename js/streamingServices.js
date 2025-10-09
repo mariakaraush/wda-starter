@@ -18,8 +18,21 @@ export default class StreamingServiceHelper {
             throw new Error('Failed to fetch streaming services');
         }
         const data = await response.json();
-        const services = data.streamingOptions.gb[0];
-        console.log(services);
-        return services;
+        const services = data.streamingOptions;
+
+        const streamingService = this.getFirstStreamingOption(services);
+        console.log(streamingService);
+        return streamingService;
+    }
+
+    getFirstStreamingOption(streamingOptions) {
+        const countryArray = Object.values(streamingOptions);
+
+        for (const country of countryArray) {
+            if(country && country.length > 0) {
+                return country[0];
+            }
+        }
+        return null;
     }
 }   

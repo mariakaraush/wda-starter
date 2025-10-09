@@ -1,0 +1,77 @@
+.streaming {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #a4e5d9;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    border: 1px solid #ccc;
+}
+
+.streaming h4 {
+    color: #333;
+    margin: 0 0 15px 0;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.streaming-service {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    border: 1px solid #ccc;
+    transition: background-color 0.3s;
+}
+
+.service-name {
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+    flex: 1;
+}
+
+.streaming-service a {
+    background-color: #a4e5d9;
+    color: black;
+    text-decoration: none;
+    padding: 15px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: medium;
+    cursor: pointer;
+    border: none;
+    flex: 1;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.streaming-service a:hover {
+    background-color: #88c8bc;
+}
+
+.streaming-service img {
+    max-width: 50%;
+    flex: 1;
+    border-radius: 5px;
+    object-fit: contain;
+    align-self: center;
+
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+div[x-show="!services"] {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    margin: 20px 0;
+    color: #555;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}

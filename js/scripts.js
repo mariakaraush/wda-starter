@@ -1,6 +1,7 @@
 import MovieHelper from "./movies.js"
 import { appData } from "./appData.js";
 import StreamingServiceHelper from "./streamingServices.js";
+import RunTimeApi from "./runTimeApi.js";
 
 // By default, modules have their own scope, so we need to manually create our own
 // loadMovies function on the window object, which can be used to interact with
@@ -39,11 +40,20 @@ window.getMoviesByStartYear = async (startYear) => {
     return await Movies.getMoviesByStartYear(startYear);
 }
 
+window.getMoviesByYearOrGenre = async (startYear = null, genre = null) => {
+    const Movies = new MovieHelper();
+    return await Movies.filterMoviesByYearOrGenre(startYear, genre);
+}
+
 window.getMoviesByKeyword = async (keyword) => {
     const Movies = new MovieHelper();
     return await Movies.getMoviesByKeyword(keyword);
 }
 
+window.getMoviesWithRuntime = async (minRuntime, maxRuntime) => {
+    const runTimeApi = new RunTimeApi();
+    return await runTimeApi.getMoviesWithRuntime(minRuntime, maxRuntime);
+}
 window.appData = appData;
 
   

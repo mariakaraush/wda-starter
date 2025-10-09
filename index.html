@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8" lang="en">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Discover your next watch, browse by genre and release date, manage your personal watchlist, and explore detailed movie information including cast and crew credits.">
     <title>Showing Movie Data from an API</title>
@@ -55,34 +55,73 @@
         <label for="genre-select" class="sr-only">Filter by genre</label>
         <select id="genre-select" class="search-input" x-model="selectedGenre">
             <option value="">All Genres</option>
-            <template x-for="genre in genres" :key="genre">
+            <template x-for="genre in staticGenres" :key="genre">
                 <option :value="genre" x-text="genre"></option>
             </template>
-    </select>
+        </select>
 
-    <label for="release-date-select" class="sr-only">Filter by release date</label>
-    <select id="release-date-select" class="search-input" x-model="selectedReleaseDate">
-        <option value="">All Release Dates</option>
-        <template x-for="date in releaseDates" :key="date">
-            <option :value="date" x-text="date"></option>
-        </template>
-    </select>
+        <label for="release-date-select" class="sr-only">Filter by release date</label>
+        <select id="release-date-select" class="search-input" x-model="selectedReleaseDate">
+            <option value="">All Release Dates</option>
+            <template x-for="year in staticYears" :key="year">
+                <option :value="year" x-text="year"></option>
+            </template>
+        </select>
+
+        <div class="runtime-filters runtime-inputs">
+            <label for="runtime-min" class="sr-only">Minimum runtime in minutes</label>
+            <input 
+                id="runtime-min" 
+                class="search-input runtime-input" 
+                type="number" 
+                placeholder="Min runtime (mins)" 
+                x-model="runtimeMin" 
+                min="1" 
+                max="300"
+            />
+            
+            <label for="runtime-max" class="sr-only">Maximum runtime in minutes</label>
+            <input 
+                id="runtime-max" 
+                class="search-input runtime-input" 
+                type="number" 
+                placeholder="Max runtime (mins)" 
+                x-model="runtimeMax" 
+                min="1" 
+                max="300"
+            />
+             </div>
+            <div class="runtime-filters">
+                <button class="runtime-buttons" @click="filterByRuntime()">Filter by runtime</button>
+                <button class="runtime-buttons" @click="clearRuntimeFilters()">Clear runtime</button>
+            </div>
+       
     </div>
 
-    <div class="movie-count">Movies Found: <span x-text="movies.length"></span></div>
+    <div class="movie-count">
+        <div>Movies Found: <span x-text="getCurrentMovieCount()"></span></div>
+        <div><a href="./views/watchlist.html" class="watchlist-link">
+            Movies In Watchlist: <span x-text="watchlist.length"></span>
+        </a></div>
+    </div>
 
 
-    <template x-for="movie in movies">
+    <template x-for="movie in (runtimeMin && runtimeMax ? moviesByRuntime : movies)" :key="movie.id">
         <div class="movie-card">
-            <img class="movie-poster" :src="movie.primaryImage.url" :alt="`Movie poster for ${movie.primaryTitle}`" />
+            <img class="movie-poster" :src="getMoviePoster(movie)" :alt="`Movie poster for ${getMovieTitle(movie)}`" />
             <div class="movie-details">
-                <div x-text="movie.primaryTitle"></div>
-                <div x-show="movie.plot">Overview: <span x-text="movie.plot"></span></div>
-                <div>Release Date: <span x-text="movie.startYear"></span></div>
-                <div x-show="movie.genres">Genres: <span x-text="movie.genres.join(', ')"></span></div>
+                <div x-text="getMovieTitle(movie)"></div>
+                <div x-show="getMovieOverview(movie)">Overview: <span x-text="getMovieOverview(movie)"></span></div>
+                <div>Release Date: <span x-text="getMovieYear(movie)"></span></div>
+                <div x-show="getMovieGenres(movie)">Genres: <span x-text="getMovieGenres(movie)"></span></div>
                 <div class="movie-buttons">
-                    <button @click="getMovieCredits(movie.id)" :aria-label="`View details for ${movie.primaryTitle}`">More Details</button>
-                    <button @click="addToWatchlist(movie.id)" :aria-label="`Add ${movie.primaryTitle} to watchlist`">Add to Watchlist</button>
+                    <button @click="getMovieDetailsAndCredits(movie)" :aria-label="`View details for ${getMovieTitle(movie)}`">More Details</button>
+                    <button 
+                        @click="addToWatchlist(movie.id)" 
+                        :aria-label="`Add ${getMovieTitle(movie)} to watchlist`"
+                        :class="{ 'in-watchlist': isMovieInWatchlistSync(movie) }"
+                        x-text="isMovieInWatchlistSync(movie) ? 'Added to Watchlist' : 'Add to Watchlist'">  
+                    </button>
                 </div>
             </div>
         </div>

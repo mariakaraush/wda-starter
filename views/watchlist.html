@@ -3,6 +3,7 @@
 <head>
     <title>Watchlist</title>
     <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/streamingServicesStyle.css"/>
     <script type="module" src="../js/scripts.js"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
@@ -21,7 +22,7 @@
     <div x-data="appData()" x-init="loadWatchlist()">
 
     <template x-if="watchlist.length === 0">
-        <div role="status" aria-live="polite">
+        <div class="empty-watchlist" role="status" aria-live="polite">
             <p>Your watchlist is empty. Go back to <a href="/index.html">Home</a> to add movies.</p>
         </div>
     </template>
@@ -52,15 +53,16 @@
                     <div>
                         <img :src="selectedMovie.primaryImage.url" alt="Movie Poster" class="slide-poster" />
                         <h2 x-text="selectedMovie.primaryTitle"></h2>
-                    
-                    <div x-show="services">
+
+                    <div x-show="services" class="streaming">
                         <h4>Available on:</h4>
                         <div class="streaming-service">
-                            <strong x-text="services.name"></strong>
-                            <a :href="services.link" target="_blank">Watch Now</a>
+                            <div class="service-name" x-text="services.service.name"></div>
                             <img :src="services.service.imageSet.lightThemeImage" alt="Service Logo">
+                            <a :href="services.link" target="_blank">Watch Now</a>
                         </div>
                     </div>
+                    <div x-show="!services">No streaming options available.</div>
                     </div>
                 </template>
             </div>
