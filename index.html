@@ -137,6 +137,7 @@
                     <p><strong>Overview:</strong> <span x-text="selectedMovie.plot"></span></p>
                     <p><strong>Release Date:</strong> <span x-text="selectedMovie.startYear"></span></p>
                     <p><strong>Genres:</strong> <span x-text="selectedMovie.genres.join(', ')"></span></p>
+                    <p><strong>Runtime:</strong> <span x-text="getRuntime(selectedMovie) + ' mins'"></span></p>
                     <p><strong>Rating:</strong> <span x-text="selectedMovie.rating?.aggregateRating"></span></p>
                     <p><strong>Credits:</strong></p>
                     <div x-show="credits">

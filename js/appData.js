@@ -252,7 +252,17 @@ export function appData() {
             return '';
         },
 
-       
+        getRuntime(movie) {
+            if (movie.runtimeSeconds) {
+                const minutes = Math.floor(movie.runtimeSeconds / 60);
+                return minutes;
+            }
+            if (movie.runtime) {
+                return movie.runtime;
+            }
+            return 'N/A';
+
+        },
 
         mapGenreIds(genreIds) {
             const genreMap = {
