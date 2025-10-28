@@ -29,8 +29,13 @@ export default class StreamingServiceHelper {
         // console.log(services);
 
         const streamingService = this.getFirstStreamingOption(services);
-        console.log(streamingService);
-        return streamingService;
+
+        if (!streamingService) {
+            return [];
+        }
+        const detailedServices = this.getServicesWithDetails(streamingService);
+        console.log(detailedServices);
+        return detailedServices;
     }
 
     getFirstStreamingOption(streamingOptions) {
@@ -52,4 +57,23 @@ export default class StreamingServiceHelper {
         }
         return null;
     }
+
+    getServicesWithDetails(data) {
+        const services = [];
+        const watchLink = data.link;
+
+        if (data.rent && Array.isArray(data.rent)) {
+            data.rent.forEach(service => {
+                services.push({
+                    provider_id: service.provider_id,
+                    provider_name: service.provider_name,
+                    logo_path: service.logo_path,
+                    link: watchLink
+                });
+            });
+        }
+
+        return services;
+    }
+
 }   

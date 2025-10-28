@@ -10,10 +10,16 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
+    <div x-data="appData()" x-init="loadWatchlist(); applyDarkMode();">
     
     <nav>
         <a href="/index.html"><img class="logo" src="../assets/images/film_logo.png" alt="MovieFinder Logo"></a>
         <a href="/index.html">Home</a>
+
+        <button @click="toggleDarkMode()" class="dark-mode-toggle" :aria-label="darkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+            <span x-show="!darkMode">🌙</span>
+            <span x-show="darkMode">☀️</span>
+        </button>
     </nav>
 
     <header>
@@ -21,7 +27,7 @@
     </header>
 
     <h1 class="title">Your Watchlist</h1>
-    <div x-data="appData()" x-init="loadWatchlist()">
+  
 
     <template x-if="watchlist.length === 0">
         <div class="empty-watchlist" role="status" aria-live="polite">
@@ -56,16 +62,21 @@
                         <img :src="getMoviePoster(selectedMovie)" alt="Movie Poster" class="slide-poster" />
                         <h2 x-text="getMovieTitle(selectedMovie)"></h2>
 
-                    <template x-for="service in services" :key="service.name">
-                        <div x-show="service" class="streaming">
+                    <div x-show="services && services.length > 0">
                         <h4>Available on:</h4>
-                        <div class="streaming-service">
-                            <div class="service-name" x-text="service.provider_name"></div>
-                            <img :src="" alt="Service Logo">
-                            <a :href="service.link" target="_blank">Watch Now</a>
-                        </div>
+                        <template x-for="service in services" :key="service.provider_id">
+                            <div class="streaming-service">
+                                <img :src="`https://image.tmdb.org/t/p/w92${service.logo_path}`" 
+                                    :alt="`${service.provider_name} logo`"
+                                    class="service-logo">
+                                <div class="service-info">
+                                    <div class="service-name" x-text="service.provider_name"></div>
+                                    <div class="service-type" x-text="service.type"></div>
+                                </div>
+                                <a :href="service.link" target="_blank" class="watch-btn">Watch Now</a>
+                            </div>
+                        </template>
                     </div>
-                    </template>
 
                     <div x-show="!services">No streaming options available.</div>
                     </div>

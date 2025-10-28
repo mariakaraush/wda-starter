@@ -21,10 +21,16 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
+    <div x-data="appData()" x-init="loadMovieData(); filterMovies(); applyDarkMode();">
     <nav>
         <a href="/index.html"><img class="logo" src="./assets/images/film_logo.png" alt="MovieFinder Logo"></a>
         <a href="/index.html">Home</a>
         <a href="/views/watchlist.html">Manage Watchlist</a>
+
+        <button @click="toggleDarkMode()" class="dark-mode-toggle" :aria-label="darkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+            <span x-show="!darkMode">🌙</span>
+            <span x-show="darkMode">☀️</span>
+        </button>
     </nav>
 
     <header>
@@ -32,7 +38,7 @@
     </header>
 
     <h1 class="title">Popular Films</h1>
-    <div x-data="appData()" x-init="loadMovieData(); filterMovies()">
+    
 
         <div x-show="toastMessage" 
             x-transition:enter="transition ease-out duration-300"

@@ -1,43 +1,48 @@
 .streaming {
     margin: 20px 0;
     padding: 20px;
-    background-color: #a4e5d9;
+    background-color: var(--accent-color, #a4e5d9);
     border-radius: 5px;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px var(--shadow, rgba(0,0,0,0.1));
+    border: 1px solid var(--border-color, #ccc);
+    transition: all 0.3s ease;
 }
 
 .streaming h4 {
-    color: #333;
+    color: var(--text-color, #333);
     margin: 0 0 15px 0;
     font-size: 18px;
     font-weight: bold;
     text-align: center;
+    transition: color 0.3s ease;
 }
 
 .streaming-service {
-    background: white;
+    background-color: var(--card-bg, white);
     padding: 15px;
     border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 15px;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-    border: 1px solid #ccc;
-    transition: background-color 0.3s;
+    box-shadow: 2px 2px 5px var(--shadow, rgba(0,0,0,0.1));
+    border: 1px solid var(--border-color, #ccc);
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
 }
 
 .service-name {
     font-weight: bold;
     font-size: 16px;
-    color: #333;
+    color: var(--text-color, #333);
     flex: 1;
+    transition: color 0.3s ease;
 }
 
-.streaming-service a {
-    background-color: #a4e5d9;
-    color: black;
+.streaming-service a,
+.watch-btn {
+    background-color: var(--accent-color, #a4e5d9);
+    color: var(--text-color, black);
     text-decoration: none;
     padding: 15px 25px;
     border-radius: 5px;
@@ -47,11 +52,12 @@
     border: none;
     flex: 1;
     text-align: center;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
 }
 
-.streaming-service a:hover {
-    background-color: #88c8bc;
+.streaming-service a:hover,
+.watch-btn:hover {
+    background-color: var(--accent-hover, #88c8bc);
 }
 
 .streaming-service img {
@@ -60,18 +66,56 @@
     border-radius: 5px;
     object-fit: contain;
     align-self: center;
-
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 2px 2px 5px var(--shadow, rgba(0,0,0,0.1));
+    transition: box-shadow 0.3s ease;
 }
 
 div[x-show="!services"] {
     text-align: center;
     padding: 20px;
-    background-color: #f8f9fa;
+    background-color: var(--card-bg, #f8f9fa);
     border-radius: 5px;
     margin: 20px 0;
-    color: #555;
+    color: var(--text-color, #555);
     font-size: 18px;
-    border: 1px solid #ccc;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    border: 1px solid var(--border-color, #ccc);
+    box-shadow: 2px 2px 5px var(--shadow, rgba(0,0,0,0.1));
+    transition: all 0.3s ease;
+}
+
+.service-type {
+    color: var(--text-color, #333);
+    opacity: 0.7;
+    font-size: 14px;
+    margin-top: 4px;
+    transition: color 0.3s ease;
+}
+
+.service-info {
+    flex: 1;
+    text-align: left;
+}
+
+
+@media (max-width: 768px) {
+    .streaming-service {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .streaming-service img {
+        max-width: 80px;
+        max-height: 80px;
+    }
+    
+    .streaming-service a,
+    .watch-btn {
+        width: 100%;
+        padding: 12px 20px;
+    }
+    
+    .service-info {
+        text-align: center;
+    }
 }

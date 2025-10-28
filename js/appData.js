@@ -41,6 +41,22 @@ export function appData() {
             'War',
             'Western'
         ],
+        darkMode: localStorage.getItem('darkMode') === 'true' || false,
+
+        toggleDarkMode() {
+            this.darkMode = !this.darkMode;
+            localStorage.setItem('darkMode', this.darkMode);
+            this.applyDarkMode();
+        },
+
+        applyDarkMode() {
+            if (this.darkMode) {
+                document.documentElement.classList.add('dark-mode');
+                console.log('Added dark-mode class');
+            } else {
+                document.documentElement.classList.remove('dark-mode');
+            }
+        },
 
         showToast(message, type = 'success') {
             this.toastMessage = message;
