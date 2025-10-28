@@ -1,7 +1,6 @@
 import MovieHelper from "./movies.js"
 import { appData } from "./appData.js";
 import StreamingServiceHelper from "./streamingServices.js";
-import RunTimeApi from "./runTimeApi.js";
 
 // By default, modules have their own scope, so we need to manually create our own
 // loadMovies function on the window object, which can be used to interact with
@@ -35,24 +34,28 @@ window.getMoviesByGenre = async (genre) => {
     return await Movies.getMoviesByGenre(genre);
 }
 
-window.getMoviesByStartYear = async (startYear) => {
+window.filterMoviesByYearOrGenreOrByRunTime = async (startYear, genre, minRuntime, maxRuntime) => {
     const Movies = new MovieHelper();
-    return await Movies.getMoviesByStartYear(startYear);
+    return await Movies.filterMoviesByYearOrGenreOrByRunTime(startYear, genre, minRuntime, maxRuntime);
 }
 
-window.getMoviesByYearOrGenre = async (startYear = null, genre = null) => {
+window.getMoviesByYearOrGenre = async (startYear = null, genre = null) => { 
     const Movies = new MovieHelper();
-    return await Movies.filterMoviesByYearOrGenre(startYear, genre);
+    return await Movies.getMoviesByYearOrGenre(startYear, genre);
 }
 
-window.getMoviesByKeyword = async (keyword) => {
+window.getMoviesByKeyword = async (keyword) => {    
     const Movies = new MovieHelper();
     return await Movies.getMoviesByKeyword(keyword);
 }
 
 window.getMoviesWithRuntime = async (minRuntime, maxRuntime) => {
-    const runTimeApi = new RunTimeApi();
+    const runTimeApi = new MovieHelper();
     return await runTimeApi.getMoviesWithRuntime(minRuntime, maxRuntime);
+}
+window.getImdbId = async (tmdbId) => {
+    const runTimeApi = new MovieHelper();
+    return await runTimeApi.getImdbId(tmdbId);
 }
 window.appData = appData;
 

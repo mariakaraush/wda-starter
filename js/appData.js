@@ -1,4 +1,4 @@
-import RunTimeApi from "./runTimeApi.js";
+
 
 export function appData() {
     return {
@@ -16,7 +16,6 @@ export function appData() {
         selectedReleaseDate: null,
         searchQuery: '',
         services: [],
-        moviesByRuntime: [],
         runtimeMin: null,
         runtimeMax: null,
         toastMessage: '',
@@ -87,39 +86,33 @@ export function appData() {
         async applyFilters() {
             let filteredMovies = this.allMovies;
 
-            if (this.selectedGenre || this.selectedReleaseDate) {
-                filteredMovies = await window.getMoviesByYearOrGenre(this.selectedReleaseDate, this.selectedGenre);
+            if (this.selectedGenre || this.selectedReleaseDate || (this.runtimeMin && this.runtimeMax)) {
+                filteredMovies = await filterMoviesByYearOrGenreOrByRunTime(this.selectedReleaseDate, this.selectedGenre, this.runtimeMin, this.runtimeMax);
             }
             if (this.searchQuery) {
                 const query = this.searchQuery.toLowerCase();
-                filteredMovies = await window.getMoviesByKeyword(query);
+                filteredMovies = await getMoviesByKeyword(query);
             } 
             
             this.movies = filteredMovies;
         },
 
-        async filterByRuntime() {
-            if (this.runtimeMin && this.runtimeMax) {
-                try {
-                    this.moviesByRuntime = await getMoviesWithRuntime(this.runtimeMin, this.runtimeMax);
-                } catch (error) {
-                    this.showToast('Error fetching movies by runtime', 'error');
-                }
-            }
-        },
         clearRuntimeFilters() {
             this.runtimeMin = null;
             this.runtimeMax = null;
-            this.moviesByRuntime = [];
+            this.selectedReleaseDate = null;
+            this.selectedGenre = null;
+            this.applyFilters();
         },
 
 
          async getMovieDetailsAndCredits(movie) {
             let movieId = await this.getImdbId(movie.id);
-        
-            this.selectedMovie = await window.getMovieById(movieId);
-            this.credits = await window.getMovieCredits(movieId);
-            this.showSlide = true; 
+
+            this.selectedMovie = await getMovieById(movieId);
+            this.credits = await getMovieCredits(movieId);
+            console.log(this.credits);
+            this.showSlide = true;
         },
 
         closeSlide() {
@@ -145,21 +138,15 @@ export function appData() {
         },
 
         isMovieInWatchlistSync(movie) {
-            if (this.runtimeMin && this.runtimeMax && this.moviesByRuntime.includes(movie)) {
-                return this.watchlist.some(watchlistMovie => 
-                    watchlistMovie.primaryTitle === movie.title || 
-                    watchlistMovie.primaryTitle === movie.original_title
-                );
-            } else {
+         
  
                 return this.watchlist.some(watchlistMovie => watchlistMovie.id === movie.id);
-            }
+       
         },
 
         async getImdbId(movieId) {
-            if (this.runtimeMin && this.runtimeMax && this.moviesByRuntime.length > 0) {
-                const runtimeApi = new RunTimeApi();
-                return await runtimeApi.getImdbId(movieId);
+            if (this.movies.length > 0) {
+                return await getImdbId(movieId);
             } else {
                 return movieId;
             }
@@ -171,7 +158,7 @@ export function appData() {
             let watchlist = saveMovies ? JSON.parse(saveMovies) : [];
 
             if (!await this.isInWatchlist(movieId)) {
-                this.selectedMovie = await window.getMovieById(id);
+                this.selectedMovie = await getMovieById(id);
                 watchlist.push(this.selectedMovie);
                 localStorage.setItem('watchlist', JSON.stringify(watchlist));
                 this.showToast('Movie added to watchlist! 🎬', 'success');
@@ -196,11 +183,10 @@ export function appData() {
                 this.selectedMovie = this.watchlist.find(movie => movie.id === movieId);
                 this.whereToWatchSlide = true;
 
-                this.services = await window.getStreamingServices(movieId);
+                this.services = await getStreamingServices(movieId);
                 console.log(this.services);
             } catch (error) {
                 console.error('Error fetching streaming services:', error);
-                this.services = null;
             }
         },
 
@@ -239,24 +225,21 @@ export function appData() {
         getMoviePoster(movie) {
             if (movie.primaryImage?.url) return movie.primaryImage.url;
             if (movie.poster_path) return `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-            return './assets/images/no-poster.png'; // fallback image
+            return './assets/images/no_poster_image.jpg'; // fallback image
         },
 
         getMovieGenres(movie) {
             if (movie.genres && Array.isArray(movie.genres)) {
-                return movie.genres.join(', ');
+                return movie.genres.map(genre => genre.name).join(', ');
             }
             if (movie.genre_ids && Array.isArray(movie.genre_ids)) {
+                console.log(movie.genre_ids);
                 return this.mapGenreIds(movie.genre_ids);
             }
             return '';
         },
 
         getRuntime(movie) {
-            if (movie.runtimeSeconds) {
-                const minutes = Math.floor(movie.runtimeSeconds / 60);
-                return minutes;
-            }
             if (movie.runtime) {
                 return movie.runtime;
             }
@@ -277,8 +260,9 @@ export function appData() {
         },
 
         getCurrentMovieCount() {
-            return this.runtimeMin && this.runtimeMax ? this.moviesByRuntime.length : this.movies.length;
+            return this.movies.length;
         },
 
     }
 }
+window.appData = appData;

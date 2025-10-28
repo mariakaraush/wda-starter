@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Watchlist</title>
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/streamingServicesStyle.css"/>
@@ -31,15 +33,15 @@
 
     <template x-for="movie in watchlist" :key="movie.id">
         <div class="movie-card">
-            <img class="movie-poster" :src="movie.primaryImage.url" :alt="`Movie poster for ${movie.primaryTitle}`" />
+            <img class="movie-poster" :src="getMoviePoster(movie)" :alt="`Movie poster for ${getMovieTitle(movie)}`" />
             <div class="movie-details">
-                <div x-text="movie.primaryTitle"></div>
-                <div>Overview: <span x-text="movie.plot"></span></div>
-                <div>Release Date: <span x-text="movie.startYear"></span></div> 
-                <div>Genres: <span x-text="movie.genres.join(', ')"></span></div>
+                <div x-text="getMovieTitle(movie)"></div>
+                <div>Overview: <span x-text="getMovieOverview(movie)"></span></div>
+                <div>Release Date: <span x-text="getMovieYear(movie)"></span></div> 
+                <div>Genres: <span x-text="getMovieGenres(movie)"></span></div>
             <div class="movie-buttons">
-                <button @click="loadServices(movie.id)" :aria-label="`Find where to watch ${movie.primaryTitle}`">Where to Watch</button>
-                <button @click="removeFromWatchlist(movie.id)" :aria-label="`Remove ${movie.primaryTitle} from watchlist`">Remove from Watchlist</button>
+                <button @click="loadServices(movie.id)" :aria-label="`Find where to watch ${getMovieTitle(movie)}`">Where to Watch</button>
+                <button @click="removeFromWatchlist(movie.id)" :aria-label="`Remove ${getMovieTitle(movie)} from watchlist`">Remove from Watchlist</button>
             </div>
             </div>
         </div>
@@ -51,17 +53,20 @@
                 <button @click="closeWhereToWatchSlide()" class="close-btn">×</button>
                 <template x-if="selectedMovie">
                     <div>
-                        <img :src="selectedMovie.primaryImage.url" alt="Movie Poster" class="slide-poster" />
-                        <h2 x-text="selectedMovie.primaryTitle"></h2>
+                        <img :src="getMoviePoster(selectedMovie)" alt="Movie Poster" class="slide-poster" />
+                        <h2 x-text="getMovieTitle(selectedMovie)"></h2>
 
-                    <div x-show="services" class="streaming">
+                    <template x-for="service in services" :key="service.name">
+                        <div x-show="service" class="streaming">
                         <h4>Available on:</h4>
                         <div class="streaming-service">
-                            <div class="service-name" x-text="services.service.name"></div>
-                            <img :src="services.service.imageSet.lightThemeImage" alt="Service Logo">
-                            <a :href="services.link" target="_blank">Watch Now</a>
+                            <div class="service-name" x-text="service.provider_name"></div>
+                            <img :src="" alt="Service Logo">
+                            <a :href="service.link" target="_blank">Watch Now</a>
                         </div>
                     </div>
+                    </template>
+
                     <div x-show="!services">No streaming options available.</div>
                     </div>
                 </template>

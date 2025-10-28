@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <meta name="description" content="Discover your next watch, browse by genre and release date, manage your personal watchlist, and explore detailed movie information including cast and crew credits.">
     <title>Showing Movie Data from an API</title>
 
@@ -17,6 +17,7 @@
     <noscript><link rel="stylesheet" href="./css/style.css"></noscript>
     
     <script type="module" src="./js/scripts.js"></script>
+    <script type="module" src="js/appData.js"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
@@ -92,8 +93,8 @@
             />
              </div>
             <div class="runtime-filters">
-                <button class="runtime-buttons" @click="filterByRuntime()">Filter by runtime</button>
-                <button class="runtime-buttons" @click="clearRuntimeFilters()">Clear runtime</button>
+                <button class="runtime-buttons" @click="applyFilters()">Filter</button>
+                <button class="runtime-buttons" @click="clearRuntimeFilters()">Clear all filters</button>
             </div>
        
     </div>
@@ -106,7 +107,7 @@
     </div>
 
 
-    <template x-for="movie in (runtimeMin && runtimeMax ? moviesByRuntime : movies)" :key="movie.id">
+    <template x-for="movie in movies" :key="movie.id">
         <div class="movie-card">
             <img class="movie-poster" :src="getMoviePoster(movie)" :alt="`Movie poster for ${getMovieTitle(movie)}`" />
             <div class="movie-details">
@@ -132,22 +133,20 @@
             <button @click="closeSlide()" class="close-btn" aria-label="Close movie details panel">×</button>
             <template x-if="selectedMovie">
                 <div>
-                    <img :src="selectedMovie.primaryImage.url" :alt="`Movie poster for ${selectedMovie.primaryTitle}`" class="slide-poster" />
-                    <h2 id="movie-title" x-text="selectedMovie.primaryTitle"></h2>
-                    <p><strong>Overview:</strong> <span x-text="selectedMovie.plot"></span></p>
-                    <p><strong>Release Date:</strong> <span x-text="selectedMovie.startYear"></span></p>
-                    <p><strong>Genres:</strong> <span x-text="selectedMovie.genres.join(', ')"></span></p>
+                    <img :src="getMoviePoster(selectedMovie)" :alt="`Movie poster for ${getMovieTitle(selectedMovie)}`" class="slide-poster" />
+                    <h2 id="movie-title" x-text="getMovieTitle(selectedMovie)"></h2>
+                    <p><strong>Overview:</strong> <span x-text="getMovieOverview(selectedMovie)"></span></p>
+                    <p><strong>Release Date:</strong> <span x-text="getMovieYear(selectedMovie)"></span></p>
+                    <p><strong>Genres:</strong> <span x-text="getMovieGenres(selectedMovie)"></span></p>
                     <p><strong>Runtime:</strong> <span x-text="getRuntime(selectedMovie) + ' mins'"></span></p>
-                    <p><strong>Rating:</strong> <span x-text="selectedMovie.rating?.aggregateRating"></span></p>
                     <p><strong>Credits:</strong></p>
                     <div x-show="credits">
                         <template x-for="credit in credits">
                             <div class="cast-member">
-                                <img class="cast-image" :src="credit.name.primaryImage.url" :alt="`Photo of ${credit.name.displayName}`">
+                                <img class="cast-image" :src="`https://image.tmdb.org/t/p/w500${credit.profile_path}`" :alt="`Photo of ${credit.name}`">
                                 <div class="cast-info">
-                                    <p><strong>Name:</strong> <span x-text="credit.name.displayName"></span></p>
-                                    <p><strong>Category:</strong> <span x-text="credit.category"></span></p>
-                                    <p><strong>Role:</strong> <span x-text="credit.name.primaryProfessions.join(', ')"></span></p>
+                                    <p><strong>Name:</strong> <span x-text="credit.name"></span></p>
+                                    <p><strong>Character:</strong> <span x-text="credit.character"></span></p>
                                 </div>
                             </div>
                         </template>
