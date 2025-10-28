@@ -295,6 +295,7 @@ button.in-watchlist:hover {
     min-width: 180px;
 }
 
+
 @media (max-width: 768px) {
     nav {
         flex-direction: column;
