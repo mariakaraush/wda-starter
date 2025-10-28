@@ -60,7 +60,6 @@ export default class MovieHelper {
     }
     async getMoviesByRuntime(minRuntime, maxRuntime) {
         const data = await this.makeApiCall(`/discover/movie?with_runtime.gte=${minRuntime}&with_runtime.lte=${maxRuntime}`);
-        console.log(`Movies with runtime between ${minRuntime} and ${maxRuntime}:`, data.results);
         return data.results;
     }
 
@@ -80,16 +79,12 @@ export default class MovieHelper {
 
 
     async getMoviesByGenre(genre) {
-        console.log(genre)
-        
         const genreId = await this.getGenreId(genre);
-        console.log(genreId)
         if (!genreId) {
             throw new Error(`Genre "${genre}" not found`);
         }
 
         const data = await this.makeApiCall(`/discover/movie?with_genres=${genreId}`);
-        console.log(data.results);
         return data.results;
     }
 
@@ -100,7 +95,6 @@ export default class MovieHelper {
 
     async getMoviesByKeyword(keyword) {
         const data = await this.makeApiCall(`/search/movie?query=${keyword}`);
-        console.log(data.results);
         const titlesWithDetails = await Promise.all(
             data.results.map(async (element) => {
                 try {
@@ -121,7 +115,6 @@ export default class MovieHelper {
     }
 
     async addToWatchlist(movieId) {
-        console.log(`Movie with ID ${movieId} added to watchlist.`);
         return { success: true, movieId: movieId };
     }
 

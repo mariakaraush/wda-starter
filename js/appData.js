@@ -52,7 +52,6 @@ export function appData() {
         applyDarkMode() {
             if (this.darkMode) {
                 document.documentElement.classList.add('dark-mode');
-                console.log('Added dark-mode class');
             } else {
                 document.documentElement.classList.remove('dark-mode');
             }
@@ -127,7 +126,6 @@ export function appData() {
 
             this.selectedMovie = await getMovieById(movieId);
             this.credits = await getMovieCredits(movieId);
-            console.log(this.credits);
             this.showSlide = true;
         },
 
@@ -149,7 +147,6 @@ export function appData() {
         },
         async isInWatchlist(movieId) {
             const id = await this.getImdbId(movieId);
-            console.log(id);
             return this.watchlist.some(movie => movie.id === id);
         },
 
@@ -200,7 +197,6 @@ export function appData() {
                 this.whereToWatchSlide = true;
 
                 this.services = await getStreamingServices(movieId);
-                console.log(this.services);
             } catch (error) {
                 console.error('Error fetching streaming services:', error);
             }
@@ -249,7 +245,6 @@ export function appData() {
                 return movie.genres.map(genre => genre.name).join(', ');
             }
             if (movie.genre_ids && Array.isArray(movie.genre_ids)) {
-                console.log(movie.genre_ids);
                 return this.mapGenreIds(movie.genre_ids);
             }
             return '';

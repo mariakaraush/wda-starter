@@ -26,7 +26,6 @@ export default class StreamingServiceHelper {
 
         const data = await response.json();
         const services = data.results;
-        // console.log(services);
 
         const streamingService = this.getFirstStreamingOption(services);
 
@@ -34,7 +33,6 @@ export default class StreamingServiceHelper {
             return [];
         }
         const detailedServices = this.getServicesWithDetails(streamingService);
-        console.log(detailedServices);
         return detailedServices;
     }
 
